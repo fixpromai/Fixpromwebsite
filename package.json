@@ -1,13 +1,17 @@
 {
   "name": "fixprom-fullstack",
   "version": "1.0.0",
-  "description": "FixProm frontend + backend local server",
-  "main": "frontend-server.js",
+  "description": "FixProm unified backend and frontend server for Render deployment",
+  "main": "backend/server.js",
   "scripts": {
-    "dev": "concurrently \"node backend/server.js\" \"node frontend-server.js\""
+    "start": "node backend/server.js"
   },
   "dependencies": {
-    "concurrently": "^9.1.2",
-    "express": "^4.18.2"
+    "express": "^4.18.2",
+    "dotenv": "^16.3.1",
+    "mongoose": "^7.6.0",
+    "passport": "^0.7.0",
+    "connect-mongo": "^5.0.0",
+    "express-session": "^1.17.3"
   }
 }
