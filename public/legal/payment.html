@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Upgrade to Pro – FixProm</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+  <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+</head>
+<body class="bg-gray-50 text-gray-900">
+
+  <div class="max-w-md mx-auto py-20 px-4 sm:px-6">
+    <h1 class="text-4xl font-bold text-center mb-8">Upgrade to Pro</h1>
+
+    <div class="bg-white rounded-2xl shadow-lg p-8 space-y-6">
+      <div class="text-center">
+        <p class="text-xl font-semibold text-gray-900">Total: ₹79 / $1</p>
+        <p class="text-xs text-gray-400 mt-1">Billed once. No auto-renewal.</p>
+      </div>
+
+      <hr class="my-4 border-gray-200"/>
+
+      <!-- Name -->
+      <div>
+        <label class="block text-sm font-medium text-gray-700 mb-1">Full Name</label>
+        <input type="text" id="name" placeholder="Your Name"
+          class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" />
+      </div>
+
+      <!-- Email -->
+      <div>
+        <label class="block text-sm font-medium text-gray-700 mb-1">Email</label>
+        <input type="email" id="email" placeholder="you@example.com"
+          class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" />
+      </div>
+
+      <!-- Address -->
+      <div>
+        <label class="block text-sm font-medium text-gray-700 mb-1">Address</label>
+        <textarea id="address" placeholder="Street, City, State, ZIP"
+          class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"></textarea>
+      </div>
+
+      <!-- Pay Button -->
+      <button id="payNowBtn"
+        class="w-full bg-blue-600 hover:bg-blue-700 text-white py-3 rounded-lg font-semibold transition duration-150">
+        Pay ₹79 / $1
+      </button>
+
+      <p class="text-xs text-gray-400 text-center mt-2">
+        🔒 Payments are 100% secure.
+      </p>
+    </div>
+  </div>
+
+  <script>
+    document.getElementById("payNowBtn").addEventListener("click", async () => {
+      const name = document.getElementById("name").value.trim();
+      const email = document.getElementById("email").value.trim();
+      const address = document.getElementById("address").value.trim();
+
+      if (!name || !email || !address) {
+        alert("❌ Please fill all details.");
+        return;
+      }
+
+      // Send request to backend to create Razorpay order
+      const res = await fetch("http://localhost:3000/api/payment/create-order", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ name, email, address, amount: 79 }),
+      });
+
+      const data = await res.json();
+
+      const options = {
+        key: "RAZORPAY_PUBLIC_KEY", // 🔁 Replace with your Razorpay public key
+        amount: data.amount,
+        currency: "INR",
+        name: "FixProm Pro Plan",
+        description: "One-time Pro upgrade",
+        order_id: data.orderId,
+        handler: function (response) {
+          alert("✅ Payment Successful!\nTransaction ID: " + response.razorpay_payment_id);
+          localStorage.setItem("fixpromUserPlan", "pro");
+          window.location.href = "success.html";
+        },
+        prefill: {
+          name: name,
+          email: email,
+        },
+        notes: {
+          address: address,
+        },
+        theme: {
+          color: "#2563eb"
+        }
+      };
+
+      const rzp = new Razorpay(options);
+      rzp.open();
+    });
+  </script>
+</body>
+</html>
