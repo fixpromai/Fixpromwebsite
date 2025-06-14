@@ -1,23 +1,20 @@
 document.addEventListener('DOMContentLoaded', () => {
   console.log('✅ googleLogin.js loaded');
 
-  // ✅ Reuse session update logic from sessionCheck.js
-  if (typeof window.updateLoginUIFromSession === 'function') {
-    window.updateLoginUIFromSession();
-  }
-
   const logoutBtn = document.getElementById('logoutBtn');
   const profileDropdown = document.getElementById('profileDropdown');
   const avatarBtn = document.getElementById('avatarBtn');
   const userAvatar = document.getElementById('userAvatar');
-
-  // ✅ Force profile icon image on load
+  const signupBtn = document.getElementById('signupBtnNav');
+  const emailDisplay = document.getElementById('userEmailDisplay');
   const avatarImg = document.getElementById('avatarImg');
+
+  // ✅ Set default avatar image
   if (avatarImg) {
-    avatarImg.src = "images/profile.png"; // ✅ Always use default profile icon
+    avatarImg.src = "images/profile.png";
   }
 
-  // 👆 Toggle dropdown on avatar click
+  // ✅ Toggle dropdown on avatar click
   if (avatarBtn && profileDropdown) {
     avatarBtn.addEventListener('click', (e) => {
       e.stopPropagation();
@@ -30,8 +27,6 @@ document.addEventListener('DOMContentLoaded', () => {
         profileDropdown.classList.remove('opacity-100', 'scale-y-100');
         profileDropdown.classList.add('opacity-0', 'scale-y-95');
       }
-
-      console.log('👆 Avatar clicked, dropdown toggled');
     });
   }
 
@@ -51,8 +46,36 @@ document.addEventListener('DOMContentLoaded', () => {
         credentials: 'include',
       }).then(() => {
         localStorage.removeItem('fixpromUserEmail');
-        window.location.reload(); // ✅ Re-run session check
+        window.location.reload();
       });
     });
   }
+
+  // ✅ Session check and UI update
+  fetch('/api/auth/check-login', {
+    method: 'GET',
+    credentials: 'include',
+  })
+    .then(async (res) => {
+      if (res.ok) {
+        const data = await res.json();
+        const email = data.user?.email || '';
+
+        // ✅ Logged in - update UI
+        if (signupBtn) signupBtn.classList.add('hidden');
+        if (userAvatar) userAvatar.classList.remove('hidden');
+        if (emailDisplay) emailDisplay.textContent = email;
+
+        localStorage.setItem('fixpromUserEmail', email);
+      } else {
+        // ❌ Not logged in - reset UI
+        if (signupBtn) signupBtn.classList.remove('hidden');
+        if (userAvatar) userAvatar.classList.add('hidden');
+        if (emailDisplay) emailDisplay.textContent = '';
+        localStorage.removeItem('fixpromUserEmail');
+      }
+    })
+    .catch((err) => {
+      console.error('❌ Session check failed', err);
+    });
 });

@@ -2,7 +2,7 @@ document.addEventListener("DOMContentLoaded", () => {
   checkSession();
 
   function checkSession() {
-    fetch("https://fixpromwebsite.onrender.com/api/auth/check-login", {
+    fetch("http://localhost:10000/api/auth/check-login", {
       method: "GET",
       credentials: "include", // ✅ Required to send cookies
     })

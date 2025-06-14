@@ -1255,6 +1255,37 @@
 <script src="scripts/sessionCheck.js" defer></script>
 
 
+<script>
+  window.updateLoginUIFromSession = function () {
+    fetch('/api/auth/check-login', {
+      method: 'GET',
+      credentials: 'include'
+    })
+      .then(async (res) => {
+        const signupBtn = document.getElementById('signupBtnNav');
+        const avatar = document.getElementById('userAvatar');
+        const emailDisplay = document.getElementById('userEmailDisplay');
+
+        if (res.ok) {
+          const data = await res.json();
+          const email = data.user?.email || '';
+
+          // ✅ Show avatar, hide signup, set email
+          if (signupBtn) signupBtn.classList.add('hidden');
+          if (avatar) avatar.classList.remove('hidden');
+          if (emailDisplay) emailDisplay.textContent = email;
+
+          localStorage.setItem('fixpromUserEmail', email);
+        } else {
+          // ❌ Not logged in – reset UI
+          if (signupBtn) signupBtn.classList.remove('hidden');
+          if (avatar) avatar.classList.add('hidden');
+          localStorage.removeItem('fixpromUserEmail');
+        }
+      })
+      .catch(console.error);
+  };
+</script>
 
 
 </body>

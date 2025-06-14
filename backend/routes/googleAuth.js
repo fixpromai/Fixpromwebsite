@@ -16,7 +16,7 @@ router.get(
   '/google/callback',
   passport.authenticate('google', {
     failureRedirect: '/login',
-    session: false, // Prevent auto-login – we do manual session login below
+    // ✅ Removed session: false to allow session cookie to be created
   }),
   (req, res, next) => {
     console.log('✅ Google login success:', req.user);

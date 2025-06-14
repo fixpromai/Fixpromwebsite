@@ -22,7 +22,7 @@ document.addEventListener('DOMContentLoaded', () => {
   let resendInterval = null;
 
   // ✅ Check session login status on page load (real session check)
-  fetch('http://localhost:5000/api/auth/check-login', {
+  fetch("http://localhost:10000/api/auth/check-login", {
     credentials: 'include'
   })
     .then(res => res.json())
