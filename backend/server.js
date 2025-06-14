@@ -18,12 +18,10 @@ dotenv.config();
 const app = express();
 const PORT = process.env.PORT || 10000;
 
-// ✅ CORS for local development
+// ✅ CORS setup (only allow frontend served by same backend port)
 const allowedOrigins = [
-  'http://localhost:5500',
-  'http://127.0.0.1:5500',
-  'http://localhost:3000',
-  'http://127.0.0.1:3000'
+  'http://localhost:10000',
+  'http://127.0.0.1:10000'
 ];
 
 app.use(cors({
@@ -63,12 +61,6 @@ app.use(
 // ✅ Passport setup
 app.use(passport.initialize());
 app.use(passport.session());
-
-// 🔍 Debug session info
-app.use((req, res, next) => {
-  console.log('🔍 Session:', req.user?.email || 'No user');
-  next();
-});
 
 // ✅ API Routes
 app.use('/api/auth', authRoutes);

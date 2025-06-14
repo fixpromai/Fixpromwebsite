@@ -44,6 +44,41 @@ document.addEventListener('DOMContentLoaded', () => {
       toggleSigninPassword.textContent = type === 'password' ? '👁️' : '🙈';
     });
   }
+
+  // Google Sign-In redirect (✅ Fixed)
+  const googleBtn = document.getElementById('googleSignIn');
+  if (googleBtn) {
+    googleBtn.addEventListener('click', () => {
+      window.location.href = '/auth/google';  // ✅ No more localhost:5000
+    });
+  }
+
+  // Avatar dropdown toggle
+  const avatarBtn = document.getElementById('avatarBtn');
+  const dropdown = document.getElementById('profileDropdown');
+
+  if (avatarBtn) {
+    avatarBtn.addEventListener('click', () => {
+      dropdown.classList.toggle('hidden');
+    });
+  }
+
+  // Optional: Close dropdown when clicking outside
+  document.addEventListener('click', (e) => {
+    if (!document.getElementById('userAvatar').contains(e.target)) {
+      dropdown.classList.add('hidden');
+    }
+  });
+
+  // Dummy logout logic (for client-only demo)
+  const logoutBtn = document.getElementById('logoutBtn');
+  if (logoutBtn) {
+    logoutBtn.addEventListener('click', () => {
+      alert('Logging out...');
+      document.getElementById('userAvatar').classList.add('hidden');
+      document.getElementById('signupBtnNav').classList.remove('hidden');
+    });
+  }
 });
 
 // Toggle Signup/Signin modal
@@ -134,10 +169,8 @@ function openForgotPasswordModal() {
   document.getElementById('resetPasswordSection').classList.add('hidden');
   document.getElementById('resendForgotOtpBtn').classList.add('hidden');
 
-  // Remove 'required' from OTP boxes to prevent focus error on hidden inputs
   document.querySelectorAll('.otp-box').forEach(box => box.removeAttribute('required'));
 
-  // Reset step
   if (typeof currentStep !== 'undefined') {
     currentStep = 'email';
   }
@@ -154,44 +187,5 @@ function closeForgotPasswordModal() {
   document.getElementById('resetPasswordSection').classList.add('hidden');
   document.getElementById('resendForgotOtpBtn').classList.add('hidden');
 
-  // Remove 'required' from OTP boxes here as well
   document.querySelectorAll('.otp-box').forEach(box => box.removeAttribute('required'));
 }
-
-document.addEventListener('DOMContentLoaded', () => {
-    const avatarBtn = document.getElementById('avatarBtn');
-    const dropdown = document.getElementById('profileDropdown');
-
-    if (avatarBtn) {
-      avatarBtn.addEventListener('click', () => {
-        dropdown.classList.toggle('hidden');
-      });
-    }
-
-    // Optional: Close dropdown when clicking outside
-    document.addEventListener('click', (e) => {
-      if (!document.getElementById('userAvatar').contains(e.target)) {
-        dropdown.classList.add('hidden');
-      }
-    });
-
-    // Dummy logout logic (replace with actual logic)
-    const logoutBtn = document.getElementById('logoutBtn');
-    if (logoutBtn) {
-      logoutBtn.addEventListener('click', () => {
-        alert('Logging out...');
-        // Hide avatar and show signup button again
-        document.getElementById('userAvatar').classList.add('hidden');
-        document.getElementById('signupBtnNav').classList.remove('hidden');
-      });
-    }
-  });
-
-  document.addEventListener('DOMContentLoaded', () => {
-  const googleBtn = document.getElementById('googleSignIn');
-  if (googleBtn) {
-    googleBtn.addEventListener('click', () => {
-      window.location.href = 'http://localhost:5000/auth/google';
-    });
-  }
-});

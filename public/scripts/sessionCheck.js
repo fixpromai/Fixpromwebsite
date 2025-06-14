@@ -2,9 +2,9 @@ document.addEventListener("DOMContentLoaded", () => {
   checkSession();
 
   function checkSession() {
-    fetch("http://localhost:5000/api/auth/check-login", {
+    fetch("/api/auth/check-login", {
       method: "GET",
-      credentials: "include", // Include session cookie
+      credentials: "include", 
     })
       .then(async (res) => {
         const avatar = document.getElementById("userAvatar");

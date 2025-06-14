@@ -9,7 +9,7 @@ document.addEventListener('DOMContentLoaded', () => {
   const avatarBtn = document.getElementById('avatarBtn');
 
   // ✅ Check session on load
-  fetch('http://localhost:5000/api/auth/check-login', {
+  fetch('/api/auth/check-login', {
     method: 'GET',
     credentials: 'include',
   })
@@ -75,20 +75,26 @@ document.addEventListener('DOMContentLoaded', () => {
   // 🚪 Logout
   if (logoutBtn) {
     logoutBtn.addEventListener('click', () => {
-      fetch('http://localhost:5000/api/auth/logout', {
+      fetch('/api/auth/logout', {
         method: 'GET',
         credentials: 'include',
       }).then(() => {
         // Clear UI
-        userEmailDisplay.textContent = '';
-        signupBtnNav.classList.remove('hidden');
-        signupBtnNav.style.display = 'inline-flex';
-        userAvatar.classList.add('hidden');
-        userAvatar.style.display = 'none';
-        profileDropdown.classList.add('hidden', 'opacity-0', 'scale-y-95');
-        profileDropdown.classList.remove('opacity-100', 'scale-y-100');
+        if (userEmailDisplay) userEmailDisplay.textContent = '';
+        if (signupBtnNav) {
+          signupBtnNav.classList.remove('hidden');
+          signupBtnNav.style.display = 'inline-flex';
+        }
+        if (userAvatar) {
+          userAvatar.classList.add('hidden');
+          userAvatar.style.display = 'none';
+        }
+        if (profileDropdown) {
+          profileDropdown.classList.add('hidden', 'opacity-0', 'scale-y-95');
+          profileDropdown.classList.remove('opacity-100', 'scale-y-100');
+        }
         localStorage.removeItem('fixpromUserEmail');
-        window.location.reload(); // optional
+        window.location.reload(); // optional: force reload after logout
       });
     });
   }

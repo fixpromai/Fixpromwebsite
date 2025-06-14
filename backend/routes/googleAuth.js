@@ -16,16 +16,22 @@ router.get(
   '/google/callback',
   passport.authenticate('google', {
     failureRedirect: '/login',
-    session: true, // ✅ ensure session is saved
+    session: true,
   }),
   (req, res) => {
     console.log('✅ Google login success:', req.user);
-    // Redirect to frontend homepage after successful login
-    res.redirect('http://localhost:5500/index.html');
+
+    // ✅ Dynamic redirect based on environment
+    const redirectUrl =
+      process.env.NODE_ENV === 'production'
+        ? '/' // Render: app is served from root
+        : '/'; // Local: also served from root (http://localhost:10000)
+
+    res.redirect(redirectUrl);
   }
 );
 
-// ✅ Google Logout (Optional, backend only)
+// ✅ Google Logout
 router.get('/logout', (req, res) => {
   req.logout((err) => {
     if (err) return res.status(500).send('Logout failed');
