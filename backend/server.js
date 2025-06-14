@@ -7,21 +7,22 @@ const MongoStore = require('connect-mongo');
 const passport = require('passport');
 const path = require('path');
 
-// Configs & Routes
+// Load .env and passport setup
+dotenv.config();
+require('./config/passport');
+
+// Routes
 const authRoutes = require('./routes/authRoutes');
 const googleAuthRoutes = require('./routes/googleAuth');
 const paymentRoutes = require('./routes/payment');
-require('./config/passport');
-
-dotenv.config();
 
 const app = express();
 const PORT = process.env.PORT || 10000;
 
-// ✅ CORS setup (only allow frontend served by same backend port)
+// ✅ CORS config (allow Render + local frontend)
 const allowedOrigins = [
   'http://localhost:10000',
-  'http://127.0.0.1:10000'
+  'https://fixpromwebsite.onrender.com',
 ];
 
 app.use(cors({
@@ -29,7 +30,7 @@ app.use(cors({
     if (!origin || allowedOrigins.includes(origin)) {
       callback(null, true);
     } else {
-      callback(new Error('Not allowed by CORS'));
+      callback(new Error('Not allowed by CORS: ' + origin));
     }
   },
   credentials: true,
@@ -38,7 +39,7 @@ app.use(cors({
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-// ✅ Session middleware with MongoDB
+// ✅ Session store in Mongo
 app.use(
   session({
     secret: process.env.SESSION_SECRET || 'fixpromsecret',
@@ -47,18 +48,18 @@ app.use(
     store: MongoStore.create({
       mongoUrl: process.env.MONGO_URI,
       dbName: 'FixProm',
-      ttl: 7 * 24 * 60 * 60, // 7 days
+      ttl: 7 * 24 * 60 * 60,
     }),
     cookie: {
       httpOnly: true,
       maxAge: 7 * 24 * 60 * 60 * 1000,
       sameSite: 'lax',
-      secure: false // Set to true only in production with HTTPS
+      secure: process.env.NODE_ENV === 'production', // ✅ Secure cookie only in prod
     },
   })
 );
 
-// ✅ Passport setup
+// ✅ Passport session handling
 app.use(passport.initialize());
 app.use(passport.session());
 
@@ -67,21 +68,21 @@ app.use('/api/auth', authRoutes);
 app.use('/auth', googleAuthRoutes);
 app.use('/api/payment', paymentRoutes);
 
-// ✅ Serve frontend from public/
+// ✅ Static frontend
 app.use(express.static(path.join(__dirname, '../public')));
 
-// ✅ Fallback for SPA (Google redirects, routing, etc.)
+// ✅ Fallback for SPA routing
 app.get('/*', (req, res) => {
   res.sendFile(path.join(__dirname, '../public/index.html'));
 });
 
-// ✅ Connect to DB and start server
+// ✅ Connect DB and start
 mongoose.connect(process.env.MONGO_URI, { dbName: 'FixProm' })
   .then(() => {
     app.listen(PORT, () => {
-      console.log(`🚀 Server ready at http://localhost:${PORT}`);
+      console.log(`🚀 Server running at http://localhost:${PORT}`);
     });
   })
   .catch(err => {
-    console.error('❌ MongoDB connection failed:', err.message);
+    console.error('❌ MongoDB connection error:', err.message);
   });
