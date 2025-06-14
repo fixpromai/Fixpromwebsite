@@ -76,15 +76,16 @@
         <!-- Sign Up (before login) -->
 
 <!-- Sign Up Button (visible when logged out) -->
+<!-- Sign Up Button (visible when logged out) -->
 <button onclick="toggleModal()" id="signupBtnNav"
-  class="bg-blue-600 text-white px-5 py-2 rounded-lg hover:bg-blue-700 transition font-semibold hidden">
+  class="bg-blue-600 text-white px-5 py-2 rounded-lg hover:bg-blue-700 transition font-semibold">
   Sign Up
 </button>
 
 <!-- Avatar/Profile Icon (visible when logged in) -->
 <div id="userAvatar" class="relative ml-4 hidden">
   <button id="avatarBtn" class="focus:outline-none">
-    <img src="images/profile.png"
+    <img id="avatarImg" src="images/profile.png"
       class="h-8 w-8 rounded-full object-cover border-2 border-white shadow cursor-pointer"
       alt="User Avatar">
   </button>
@@ -95,17 +96,6 @@
     <div id="userEmailDisplay" class="px-5 py-3 text-sm text-gray-600 border-b border-gray-200"></div>
     <ul class="text-sm text-gray-800 divide-y divide-gray-100">
       <li>
-        <!-- <a href="#" class="flex items-center px-5 py-3 hover:bg-gray-50 transition">
-  <span class="ml-3">Upgrade Plan</span>
-</a> -->
-
-      <!-- </li>
-      <li>
-        <a href="#" class="flex items-center px-5 py-3 hover:bg-gray-50 transition">
-          <span class="ml-3">Billing</span>
-        </a>
-      </li>
-      <li> -->
         <button id="logoutBtn"
           class="w-full flex items-center px-5 py-3 hover:bg-gray-50 transition text-left">
           <span class="ml-3">Logout</span>
@@ -114,7 +104,6 @@
     </ul>
   </div>
 </div>
-
 
                 </div>
                 <button id="mobileMenuBtn" class="md:hidden p-2 rounded-lg hover:bg-gray-100 transition-colors">

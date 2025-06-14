@@ -8,12 +8,14 @@ document.addEventListener("DOMContentLoaded", () => {
     })
       .then(async (res) => {
         const avatar = document.getElementById("userAvatar");
+        const avatarImg = document.getElementById("avatarImg"); // 🆕 added
         const signupBtn = document.getElementById("signupBtnNav");
         const emailDisplay = document.getElementById("userEmailDisplay");
 
         if (res.ok) {
           const data = await res.json();
           const email = data.user?.email || "";
+          const photo = data.user?.photo || ""; // 🆕 from Google
 
           // ✅ Hide signup, show avatar
           if (signupBtn) {
@@ -23,6 +25,9 @@ document.addEventListener("DOMContentLoaded", () => {
           if (avatar) {
             avatar.classList.remove("hidden");
             avatar.style.display = "block";
+          }
+          if (avatarImg && photo) {
+            avatarImg.src = photo; // 🆕 set Google profile photo
           }
           if (emailDisplay) {
             emailDisplay.textContent = email;
