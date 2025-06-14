@@ -45,11 +45,11 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
-  // Google Sign-In redirect (✅ Fixed)
+  // ✅ Google Sign-In redirect (fixed for Render)
   const googleBtn = document.getElementById('googleSignIn');
   if (googleBtn) {
     googleBtn.addEventListener('click', () => {
-      window.location.href = '/auth/google';  // ✅ No more localhost:5000
+      window.location.href = 'https://fixpromwebsite.onrender.com/auth/google';
     });
   }
 
@@ -63,14 +63,14 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
-  // Optional: Close dropdown when clicking outside
+  // Close dropdown when clicking outside
   document.addEventListener('click', (e) => {
     if (!document.getElementById('userAvatar').contains(e.target)) {
       dropdown.classList.add('hidden');
     }
   });
 
-  // Dummy logout logic (for client-only demo)
+  // Dummy logout logic (replace with actual API logout if needed)
   const logoutBtn = document.getElementById('logoutBtn');
   if (logoutBtn) {
     logoutBtn.addEventListener('click', () => {

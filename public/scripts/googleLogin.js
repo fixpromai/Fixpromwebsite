@@ -9,7 +9,7 @@ document.addEventListener('DOMContentLoaded', () => {
   const avatarBtn = document.getElementById('avatarBtn');
 
   // ✅ Check session on load
-  fetch('/api/auth/check-login', {
+  fetch('https://fixpromwebsite.onrender.com/api/auth/check-login', {
     method: 'GET',
     credentials: 'include',
   })
@@ -75,7 +75,7 @@ document.addEventListener('DOMContentLoaded', () => {
   // 🚪 Logout
   if (logoutBtn) {
     logoutBtn.addEventListener('click', () => {
-      fetch('/api/auth/logout', {
+      fetch('https://fixpromwebsite.onrender.com/api/auth/logout', {
         method: 'GET',
         credentials: 'include',
       }).then(() => {
@@ -94,7 +94,7 @@ document.addEventListener('DOMContentLoaded', () => {
           profileDropdown.classList.remove('opacity-100', 'scale-y-100');
         }
         localStorage.removeItem('fixpromUserEmail');
-        window.location.reload(); // optional: force reload after logout
+        window.location.reload(); // Optional: reload after logout
       });
     });
   }

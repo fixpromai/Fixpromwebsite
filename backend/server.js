@@ -19,10 +19,10 @@ const paymentRoutes = require('./routes/payment');
 const app = express();
 const PORT = process.env.PORT || 10000;
 
-// ✅ CORS config (allow Render + local frontend)
+// ✅ CORS config (allow deployed domain)
 const allowedOrigins = [
-  'http://localhost:10000',
   'https://fixpromwebsite.onrender.com',
+  'http://localhost:10000'
 ];
 
 app.use(cors({
@@ -39,7 +39,7 @@ app.use(cors({
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-// ✅ Session store in Mongo
+// ✅ Session store in MongoDB
 app.use(
   session({
     secret: process.env.SESSION_SECRET || 'fixpromsecret',
@@ -54,12 +54,12 @@ app.use(
       httpOnly: true,
       maxAge: 7 * 24 * 60 * 60 * 1000,
       sameSite: 'lax',
-      secure: process.env.NODE_ENV === 'production', // ✅ Secure cookie only in prod
+      secure: true, // ✅ Important: HTTPS required in production (Render)
     },
   })
 );
 
-// ✅ Passport session handling
+// ✅ Passport authentication
 app.use(passport.initialize());
 app.use(passport.session());
 
@@ -68,15 +68,15 @@ app.use('/api/auth', authRoutes);
 app.use('/auth', googleAuthRoutes);
 app.use('/api/payment', paymentRoutes);
 
-// ✅ Static frontend
+// ✅ Serve frontend
 app.use(express.static(path.join(__dirname, '../public')));
 
-// ✅ Fallback for SPA routing
+// ✅ Fallback for all unmatched frontend routes
 app.get('/*', (req, res) => {
   res.sendFile(path.join(__dirname, '../public/index.html'));
 });
 
-// ✅ Connect DB and start
+// ✅ Connect to MongoDB and start server
 mongoose.connect(process.env.MONGO_URI, { dbName: 'FixProm' })
   .then(() => {
     app.listen(PORT, () => {

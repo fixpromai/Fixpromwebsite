@@ -2,7 +2,7 @@ document.addEventListener("DOMContentLoaded", () => {
   checkSession();
 
   function checkSession() {
-    fetch("/api/auth/check-login", {
+    fetch("https://fixpromwebsite.onrender.com/api/auth/check-login", {
       method: "GET",
       credentials: "include", 
     })
