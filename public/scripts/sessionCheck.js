@@ -4,7 +4,7 @@ document.addEventListener("DOMContentLoaded", () => {
   function checkSession() {
     fetch("https://fixpromwebsite.onrender.com/api/auth/check-login", {
       method: "GET",
-      credentials: "include", 
+      credentials: "include", // ✅ Required to send cookies
     })
       .then(async (res) => {
         const avatar = document.getElementById("userAvatar");
@@ -15,6 +15,7 @@ document.addEventListener("DOMContentLoaded", () => {
           const data = await res.json();
           const email = data.user?.email || "";
 
+          // ✅ Hide signup, show avatar
           if (signupBtn) {
             signupBtn.classList.add("hidden");
             signupBtn.style.display = "none";
@@ -33,7 +34,7 @@ document.addEventListener("DOMContentLoaded", () => {
         }
       })
       .catch((err) => {
-        console.error("⚠️ Error checking login status:", err);
+        console.error("⚠️ Session check failed:", err);
         resetLoginUI();
       });
   }
@@ -58,6 +59,6 @@ document.addEventListener("DOMContentLoaded", () => {
     localStorage.removeItem("fixpromUserEmail");
   }
 
-  // 🟡 Optional: Make it reactive (e.g., after login/signup)
+  // ✅ Allow re-checking from other scripts
   window.updateLoginUIFromSession = checkSession;
 });
