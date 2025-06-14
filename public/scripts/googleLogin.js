@@ -11,6 +11,12 @@ document.addEventListener('DOMContentLoaded', () => {
   const avatarBtn = document.getElementById('avatarBtn');
   const userAvatar = document.getElementById('userAvatar');
 
+  // ✅ Force profile icon image on load
+  const avatarImg = document.getElementById('avatarImg');
+  if (avatarImg) {
+    avatarImg.src = "images/profile.png"; // ✅ Always use default profile icon
+  }
+
   // 👆 Toggle dropdown on avatar click
   if (avatarBtn && profileDropdown) {
     avatarBtn.addEventListener('click', (e) => {
