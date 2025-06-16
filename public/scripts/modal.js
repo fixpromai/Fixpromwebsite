@@ -189,3 +189,26 @@ function closeForgotPasswordModal() {
 
   document.querySelectorAll('.otp-box').forEach(box => box.removeAttribute('required'));
 }
+
+
+function handleDownloadClick() {
+  localStorage.setItem("wantsExtension", "true");
+  toggleModal(); // Open the signup/login modal
+}
+
+
+function onUserLoginSuccess() {
+  if (localStorage.getItem("wantsExtension") === "true") {
+    localStorage.removeItem("wantsExtension");
+    window.location.href = "https://chrome.google.com/webstore/detail/fixprom-extension/abcdefg1234567"; // ✅ Replace with your real Chrome Extension ID
+  }
+}
+
+
+document.addEventListener("DOMContentLoaded", () => {
+  const downloadButtons = document.querySelectorAll(".download-extension-btn");
+  downloadButtons.forEach(button => {
+    button.addEventListener("click", handleDownloadClick);
+  });
+});
+

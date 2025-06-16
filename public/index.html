@@ -71,7 +71,12 @@
       <div class="hidden md:flex items-center space-x-6">
         <a href="#features" class="text-gray-600 hover:text-primary-600 transition-colors duration-200 font-medium">Features</a>
         <!-- <a href="#pricing" class="text-gray-600 hover:text-primary-600 transition-colors duration-200 font-medium">Pricing</a> -->
-        <a href="#download" class="text-gray-600 hover:text-primary-600 transition-colors duration-200 font-medium">Download</a>
+       <button
+  class="text-gray-600 hover:text-primary-600 transition-colors duration-200 font-medium download-extension-btn"
+>
+  Download
+</button>
+
 
         <!-- Sign Up (before login) -->
 
@@ -139,21 +144,23 @@
                     
                     <!-- CTA Buttons -->
                     <div class="flex flex-col sm:flex-row gap-4 mb-6 justify-center lg:justify-start">
-                        <button id="installBtn" class="group bg-gradient-to-r from-primary-600 to-primary-700 text-white px-8 py-4 rounded-2xl hover:from-primary-700 hover:to-primary-800 font-bold text-lg transition-all duration-300 transform hover:scale-105 hover:shadow-2xl flex items-center justify-center relative overflow-hidden">
-                            <div class="absolute inset-0 bg-white/20 translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-700 skew-x-12"></div>
-            
-                            Download Extension
-                        </button>
-                        <a href="https://www.youtube.com/watch?v=cnpCi2FUxQM" target="_blank" rel="noopener noreferrer">
-  <button id="watchDemoBtn" class="bg-white/80 backdrop-blur-sm text-gray-700 px-8 py-4 rounded-2xl border-2 border-gray-200 hover:border-primary-300 hover:bg-white font-bold text-lg transition-all duration-300 flex items-center justify-center shadow-lg hover:shadow-xl transform hover:-translate-y-1">
-    <svg class="w-6 h-6 mr-3 text-primary-600" fill="currentColor" viewBox="0 0 20 20">
-      <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM9.555 7.168A1 1 0 008 8v4a1 1 0 001.555.832l3-2a1 1 0 000-1.664l-3-2z" clip-rule="evenodd" />
-    </svg>
-    Watch Demo
-  </button>
-</a>
+ <button onclick="handleDownloadClick()" id="installBtn"
+  class="group bg-gradient-to-r from-primary-600 to-primary-700 text-white px-8 py-4 rounded-2xl hover:from-primary-700 hover:to-primary-800 font-bold text-lg transition-all duration-300 transform hover:scale-105 hover:shadow-2xl flex items-center justify-center relative overflow-hidden">
+  <div class="absolute inset-0 bg-white/20 translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-700 skew-x-12"></div>
+  Download Extension
+</button>
 
-                    </div>
+
+  <a href="https://www.youtube.com/watch?v=cnpCi2FUxQM" target="_blank" rel="noopener noreferrer">
+    <button id="watchDemoBtn" class="bg-white/80 backdrop-blur-sm text-gray-700 px-8 py-4 rounded-2xl border-2 border-gray-200 hover:border-primary-300 hover:bg-white font-bold text-lg transition-all duration-300 flex items-center justify-center shadow-lg hover:shadow-xl transform hover:-translate-y-1">
+      <svg class="w-6 h-6 mr-3 text-primary-600" fill="currentColor" viewBox="0 0 20 20">
+        <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM9.555 7.168A1 1 0 008 8v4a1 1 0 001.555.832l3-2a1 1 0 000-1.664l-3-2z" clip-rule="evenodd" />
+      </svg>
+      Watch Demo
+    </button>
+  </a>
+</div>
+
                     
                     <!-- Social Proof -->
                     <div class="flex items-center justify-center lg:justify-start space-x-6 text-sm text-gray-500">
@@ -668,17 +675,10 @@
         <h3 class="text-lg font-semibold text-gray-900 mb-1">Install Extension</h3>
         <p class="text-gray-600 mb-3 text-sm">Add FixProm to Chrome in one click.</p>
         <div class="bg-white rounded-xl shadow-md p-3 w-full max-w-sm flex items-center justify-center min-h-[120px]">
-          <button class="bg-blue-600 text-white text-base sm:text-lg px-6 py-3 sm:px-8 sm:py-4 rounded-lg font-semibold hover:bg-blue-700 flex items-center">
-    <!-- Larger Chrome icon -->
-    <!-- <svg class="w-6 h-6 mr-3" viewBox="0 0 256 256" xmlns="http://www.w3.org/2000/svg" fill="none">
-      <circle cx="128" cy="128" r="120" fill="#fff" />
-      <path fill="#EA4335" d="M128 128l41.5 71.9A88.1 88.1 0 0182.7 216z" />
-      <path fill="#34A853" d="M128 128h83.3a88.1 88.1 0 01-41.5 71.9z" />
-      <path fill="#FBBC05" d="M128 128l-45.3 88A88.1 88.1 0 0144.7 128z" />
-      <path fill="#4285F4" d="M128 128L82.7 40h90.6z" />
-    </svg> -->
-    <span class="text-lg sm:text-xl font-bold">Download Extension</span>
-  </button>
+          <button onclick="handleDownloadClick()" class="bg-blue-600 text-white text-base sm:text-lg px-6 py-3 sm:px-8 sm:py-4 rounded-lg font-semibold hover:bg-blue-700 flex items-center download-extension-btn">
+  <span class="text-lg sm:text-xl font-bold">Download Extension</span>
+</button>
+
         </div>
       </div>
 
@@ -941,16 +941,13 @@
             </p>
             
             <div class="flex flex-col sm:flex-row gap-4 justify-center items-center mb-6">
-                <button id="installMainBtn" class="bg-white text-blue-600 px-6 py-3 rounded-lg hover:bg-gray-100 font-semibold text-lg transition-all transform hover:scale-105 flex items-center">
-                    <!-- <svg class="w-5 h-5 mr-2" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <circle cx="16" cy="16" r="16" fill="#4285F4" fill-opacity="0.1"/>
-                        <circle cx="16" cy="16" r="7" fill="#4285F4"/>
-                        <path d="M16 2C24.8366 2 32 9.16344 32 18H16V2Z" fill="#EA4335"/>
-                        <path d="M2 18C2 9.16344 9.16344 2 18 2V18H2Z" fill="#FBBC05"/>
-                        <path d="M16 32C7.16344 32 0 24.8366 0 16H16V32Z" fill="#34A853"/>
-                    </svg> -->
-                    Download Extension
-                </button>
+                <button
+  id="installMainBtn"
+  class="bg-white text-blue-600 px-6 py-3 rounded-lg hover:bg-gray-100 font-semibold text-lg transition-all transform hover:scale-105 flex items-center download-extension-btn"
+>
+  Download Extension
+</button>
+
                 <div class="text-blue-100 text-sm">
                     ⭐ 4.9/5 rating • 10,000+ users • Free to start
                 </div>
@@ -998,7 +995,12 @@
         <ul class="space-y-2 text-sm">
           <li><a href="#features" class="text-gray-400 hover:text-white transition-colors">Features</a></li>
           <!-- <li><a href="#pricing" class="text-gray-400 hover:text-white transition-colors">Pricing</a></li> -->
-          <li><a href="#download" class="text-gray-400 hover:text-white transition-colors">Download</a></li>
+          <li>
+  <button onclick="handleDownloadClick()" class="text-gray-400 hover:text-white transition-colors download-extension-btn">
+    Download
+  </button>
+</li>
+
         </ul>
       </div>
 
