@@ -2,7 +2,7 @@ document.addEventListener("DOMContentLoaded", () => {
   checkSession();
 
   function checkSession() {
-    fetch("http://localhost:10000/api/auth/check-login", {
+    fetch("/api/auth/check-login", {
       method: "GET",
       credentials: "include", // ✅ Required to send cookies
     })
@@ -33,6 +33,12 @@ document.addEventListener("DOMContentLoaded", () => {
           }
 
           localStorage.setItem("fixpromUserEmail", email);
+
+          // ✅ Redirect to extension if user had clicked "Download Extension" before login
+          if (typeof onUserLoginSuccess === "function") {
+            onUserLoginSuccess();
+          }
+
         } else {
           resetLoginUI();
         }

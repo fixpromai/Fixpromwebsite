@@ -7,7 +7,7 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
-  // Smooth scrolling for anchor links — only valid targets
+  // Smooth scrolling for anchor links
   document.querySelectorAll('a[href^="#"]').forEach(anchor => {
     anchor.addEventListener('click', function (e) {
       const href = this.getAttribute('href');
@@ -45,11 +45,11 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
-  // ✅ Google Sign-In redirect (fixed for Render)
+  // ✅ Google Sign-In redirect
   const googleBtn = document.getElementById('googleSignIn');
   if (googleBtn) {
     googleBtn.addEventListener('click', () => {
-      window.location.href = 'https://fixpromwebsite.onrender.com/auth/google';
+      window.location.href = '/auth/google';
     });
   }
 
@@ -70,7 +70,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   });
 
-  // Dummy logout logic (replace with actual API logout if needed)
+  // Dummy logout logic
   const logoutBtn = document.getElementById('logoutBtn');
   if (logoutBtn) {
     logoutBtn.addEventListener('click', () => {
@@ -79,6 +79,12 @@ document.addEventListener('DOMContentLoaded', () => {
       document.getElementById('signupBtnNav').classList.remove('hidden');
     });
   }
+
+  // ✅ Bind download button clicks
+  const downloadButtons = document.querySelectorAll(".download-extension-btn");
+  downloadButtons.forEach(button => {
+    button.addEventListener("click", handleDownloadClick);
+  });
 });
 
 // Toggle Signup/Signin modal
@@ -192,23 +198,26 @@ function closeForgotPasswordModal() {
 
 
 function handleDownloadClick() {
-  localStorage.setItem("wantsExtension", "true");
-  toggleModal(); // Open the signup/login modal
+  const isLoggedIn = localStorage.getItem("fixpromUserEmail");
+
+  if (isLoggedIn) {
+    window.open("https://chrome.google.com/webstore/detail/fixprom-extension/abcdefg1234567", "_blank");
+  } else {
+    // ❌ Not logged in → trigger login flow
+    localStorage.setItem("wantsExtension", "true");
+    toggleModal();
+  }
 }
 
 
 function onUserLoginSuccess() {
   if (localStorage.getItem("wantsExtension") === "true") {
     localStorage.removeItem("wantsExtension");
-    window.location.href = "https://chrome.google.com/webstore/detail/fixprom-extension/abcdefg1234567"; // ✅ Replace with your real Chrome Extension ID
+
+   
+    window.open("https://chrome.google.com/webstore/detail/fixprom-extension/abcdefg1234567", "_blank");
+
+    const modal = document.getElementById("signupModal");
+    if (modal) modal.classList.add("hidden");
   }
 }
-
-
-document.addEventListener("DOMContentLoaded", () => {
-  const downloadButtons = document.querySelectorAll(".download-extension-btn");
-  downloadButtons.forEach(button => {
-    button.addEventListener("click", handleDownloadClick);
-  });
-});
-

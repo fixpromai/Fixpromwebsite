@@ -44,7 +44,7 @@ app.use(
       httpOnly: true,
       maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
       sameSite: 'lax',  // ✅ Safe for same-origin apps
-      secure: true,     // ✅ Required since Render uses HTTPS
+      secure: false,
     },
   })
 );
