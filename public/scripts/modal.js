@@ -201,7 +201,7 @@ function handleDownloadClick() {
   const isLoggedIn = localStorage.getItem("fixpromUserEmail");
 
   if (isLoggedIn) {
-    window.open("https://chrome.google.com/webstore/detail/fixprom-extension/abcdefg1234567", "_blank");
+    window.open("https://chromewebstore.google.com/detail/fineaoekjmkdgnmeenfjdlkbnhlidmme?utm_source=item-share-cb", "_blank");
   } else {
     // ❌ Not logged in → trigger login flow
     localStorage.setItem("wantsExtension", "true");
@@ -215,7 +215,7 @@ function onUserLoginSuccess() {
     localStorage.removeItem("wantsExtension");
 
    
-    window.open("https://chrome.google.com/webstore/detail/fixprom-extension/abcdefg1234567", "_blank");
+    window.open("https://chromewebstore.google.com/detail/fineaoekjmkdgnmeenfjdlkbnhlidmme?utm_source=item-share-cb", "_blank");
 
     const modal = document.getElementById("signupModal");
     if (modal) modal.classList.add("hidden");
