@@ -26,7 +26,7 @@ document.addEventListener("DOMContentLoaded", () => {
             avatar.style.display = "block";
           }
           if (avatarImg) {
-            avatarImg.src = "images/profile.png"; // ✅ Always show this default image
+            avatarImg.src = "images/profile.png";
           }
           if (emailDisplay) {
             emailDisplay.textContent = email;
@@ -34,8 +34,9 @@ document.addEventListener("DOMContentLoaded", () => {
 
           localStorage.setItem("fixpromUserEmail", email);
 
-          // ✅ Redirect to extension if user had clicked "Download Extension" before login
-          if (typeof onUserLoginSuccess === "function") {
+          // ✅ Only redirect if user clicked "Download Extension" before login
+          const wantsExtension = localStorage.getItem("wantsExtension");
+          if (typeof onUserLoginSuccess === "function" && wantsExtension === "true") {
             onUserLoginSuccess();
           }
 

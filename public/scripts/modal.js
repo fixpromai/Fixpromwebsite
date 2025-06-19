@@ -203,7 +203,7 @@ function handleDownloadClick() {
   if (isLoggedIn) {
     window.open("https://chromewebstore.google.com/detail/fineaoekjmkdgnmeenfjdlkbnhlidmme?utm_source=item-share-cb", "_blank");
   } else {
-    // ❌ Not logged in → trigger login flow
+    
     localStorage.setItem("wantsExtension", "true");
     toggleModal();
   }
@@ -211,13 +211,18 @@ function handleDownloadClick() {
 
 
 function onUserLoginSuccess() {
-  if (localStorage.getItem("wantsExtension") === "true") {
+  const wantsExtension = localStorage.getItem("wantsExtension");
+
+  
+  const modal = document.getElementById("signupModal");
+  if (modal) modal.classList.add("hidden");
+
+ 
+  if (wantsExtension === "true") {
     localStorage.removeItem("wantsExtension");
 
-   
-    window.open("https://chromewebstore.google.com/detail/fineaoekjmkdgnmeenfjdlkbnhlidmme?utm_source=item-share-cb", "_blank");
 
-    const modal = document.getElementById("signupModal");
-    if (modal) modal.classList.add("hidden");
+   window.open("https://chromewebstore.google.com/detail/fineaoekjmkdgnmeenfjdlkbnhlidmme", "_blank");
+
   }
 }
