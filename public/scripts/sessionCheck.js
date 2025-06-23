@@ -26,7 +26,6 @@ document.addEventListener("DOMContentLoaded", () => {
         const data = await res.json();
         const email = data.user?.email || "";
 
-        // ✅ Hide signup, show avatar
         if (signupBtn) {
           signupBtn.classList.add("hidden");
           signupBtn.style.display = "none";
@@ -44,9 +43,11 @@ document.addEventListener("DOMContentLoaded", () => {
 
         localStorage.setItem("fixpromUserEmail", email);
 
+        // ✅ Handle extension redirect once
         const wantsExtension = localStorage.getItem("wantsExtension");
-        if (typeof onUserLoginSuccess === "function" && wantsExtension === "true") {
-          onUserLoginSuccess();
+        if (wantsExtension === "true") {
+          localStorage.removeItem("wantsExtension");
+          window.open("https://chromewebstore.google.com/detail/fineaoekjmkdgnmeenfjdlkbnhlidmme", "_blank");
         }
       } else {
         resetLoginUI();
@@ -77,6 +78,6 @@ document.addEventListener("DOMContentLoaded", () => {
     localStorage.removeItem("fixpromUserEmail");
   }
 
-  // ✅ Allow re-checking from other scripts
+  // ✅ Expose recheck method globally
   window.updateLoginUIFromSession = checkSession;
 });

@@ -2,18 +2,37 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <title>Fixprom Login</title>
-  <script>
-    const params = new URLSearchParams(window.location.search);
-    const token = params.get("token");
-
-    if (token) {
-      localStorage.setItem("fixpromToken", token);
-      window.location.replace("/"); // ✅ faster, avoids history entry
-    } else {
-      document.write("<h2>❌ Login failed. No token received.</h2>");
+  <title>Redirecting...</title>
+  <style>
+    /* ✅ Completely hide page contents */
+    html, body {
+      margin: 0;
+      padding: 0;
+      background: #fff;
+      overflow: hidden;
+      height: 100%;
     }
-  </script>
+  </style>
 </head>
-<body></body>
+<body>
+  <script>
+    window.addEventListener("DOMContentLoaded", () => {
+      const params = new URLSearchParams(window.location.search);
+      const token = params.get("token");
+
+      if (token) {
+        localStorage.setItem("fixpromToken", token);
+        localStorage.setItem("wantsExtension", "true");
+
+        // ✅ Silent redirect back to home
+        setTimeout(() => {
+          window.location.replace("/");
+        }, 100); // short delay ensures token is saved
+      } else {
+        // Still no visible content
+        console.error("❌ Login failed. No token found.");
+      }
+    });
+  </script>
+</body>
 </html>

@@ -1,6 +1,4 @@
 document.addEventListener('DOMContentLoaded', () => {
-
-
   const profileDropdown = document.getElementById('profileDropdown');
   const avatarBtn = document.getElementById('avatarBtn');
   const userAvatar = document.getElementById('userAvatar');
@@ -8,12 +6,10 @@ document.addEventListener('DOMContentLoaded', () => {
   const emailDisplay = document.getElementById('userEmailDisplay');
   const avatarImg = document.getElementById('avatarImg');
 
- 
   if (avatarImg) {
     avatarImg.src = "images/profile.png";
   }
 
-  
   if (avatarBtn && profileDropdown) {
     avatarBtn.addEventListener('click', (e) => {
       e.stopPropagation();
@@ -29,7 +25,6 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
-
   document.addEventListener('click', (e) => {
     if (!userAvatar.contains(e.target)) {
       profileDropdown?.classList.add('hidden', 'opacity-0', 'scale-y-95');
@@ -37,7 +32,6 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   });
 
-  
   fetch('/api/auth/check-login', {
     method: 'GET',
     credentials: 'include',
@@ -52,6 +46,16 @@ document.addEventListener('DOMContentLoaded', () => {
         if (emailDisplay) emailDisplay.textContent = email;
 
         localStorage.setItem('fixpromUserEmail', email);
+
+        // ✅ Redirect to Chrome Extension if flag is set
+        const shouldRedirect = localStorage.getItem('redirectToExtension');
+        if (shouldRedirect === 'true') {
+          localStorage.removeItem('redirectToExtension');
+          setTimeout(() => {
+            window.open("https://chromewebstore.google.com/detail/fineaoekjmkdgnmeenfjdlkbnhlidmme", "_blank");
+          }, 1000); // Optional delay
+        }
+
       } else {
         if (signupBtn) signupBtn.classList.remove('hidden');
         if (userAvatar) userAvatar.classList.add('hidden');
