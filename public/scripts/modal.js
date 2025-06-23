@@ -45,7 +45,7 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
-  // ✅ Google Sign-In redirect
+
   const googleBtn = document.getElementById('googleSignIn');
   if (googleBtn) {
     googleBtn.addEventListener('click', () => {
@@ -56,31 +56,28 @@ document.addEventListener('DOMContentLoaded', () => {
   // Avatar dropdown toggle
   const avatarBtn = document.getElementById('avatarBtn');
   const dropdown = document.getElementById('profileDropdown');
-
   if (avatarBtn) {
     avatarBtn.addEventListener('click', () => {
       dropdown.classList.toggle('hidden');
     });
   }
 
-  // Close dropdown when clicking outside
+
   document.addEventListener('click', (e) => {
-    if (!document.getElementById('userAvatar').contains(e.target)) {
-      dropdown.classList.add('hidden');
+    const avatar = document.getElementById('userAvatar');
+    const dropdown = document.getElementById('profileDropdown');
+    const logoutModal = document.getElementById('logoutModal');
+
+    const isClickInsideAvatar = avatar?.contains(e.target);
+    const isClickInsideDropdown = dropdown?.contains(e.target);
+    const isClickInsideLogoutModal = logoutModal?.contains(e.target);
+
+    if (!isClickInsideAvatar && !isClickInsideDropdown && !isClickInsideLogoutModal) {
+      dropdown?.classList.add('hidden');
     }
   });
 
-  // Dummy logout logic
-  const logoutBtn = document.getElementById('logoutBtn');
-  if (logoutBtn) {
-    logoutBtn.addEventListener('click', () => {
-      alert('Logging out...');
-      document.getElementById('userAvatar').classList.add('hidden');
-      document.getElementById('signupBtnNav').classList.remove('hidden');
-    });
-  }
 
-  // ✅ Bind download button clicks
   const downloadButtons = document.querySelectorAll(".download-extension-btn");
   downloadButtons.forEach(button => {
     button.addEventListener("click", handleDownloadClick);
@@ -196,33 +193,31 @@ function closeForgotPasswordModal() {
   document.querySelectorAll('.otp-box').forEach(box => box.removeAttribute('required'));
 }
 
-
+// Handle Chrome extension download
 function handleDownloadClick() {
   const isLoggedIn = localStorage.getItem("fixpromUserEmail");
 
   if (isLoggedIn) {
     window.open("https://chromewebstore.google.com/detail/fineaoekjmkdgnmeenfjdlkbnhlidmme?utm_source=item-share-cb", "_blank");
   } else {
-    
     localStorage.setItem("wantsExtension", "true");
     toggleModal();
   }
 }
 
-
 function onUserLoginSuccess() {
   const wantsExtension = localStorage.getItem("wantsExtension");
-
-  
   const modal = document.getElementById("signupModal");
+
   if (modal) modal.classList.add("hidden");
 
- 
+  if (typeof window.updateLoginUIFromSession === "function") {
+    window.updateLoginUIFromSession();
+  }
+
   if (wantsExtension === "true") {
     localStorage.removeItem("wantsExtension");
-
-
-   window.open("https://chromewebstore.google.com/detail/fineaoekjmkdgnmeenfjdlkbnhlidmme", "_blank");
-
+    window.open("https://chromewebstore.google.com/detail/fineaoekjmkdgnmeenfjdlkbnhlidmme", "_blank");
   }
 }
+

@@ -1,8 +1,8 @@
 const User = require('../models/User');
 const bcrypt = require('bcrypt');
+const jwt = require('jsonwebtoken');
 const sendVerificationEmail = require('../utils/sendEmail');
 
-// In-memory store
 const tempUsers = {};
 
 exports.requestSignupOtp = async (req, res) => {
@@ -61,14 +61,12 @@ exports.verifySignupOtp = async (req, res, next) => {
     await user.save();
     delete tempUsers[email];
 
-    // Log in the user to create session
     req.login(user, (err) => {
       if (err) {
         console.error('❌ Session creation failed:', err);
         return res.status(500).json({ message: 'Login session error' });
       }
 
-      // ✅ Force session save (this is the key)
       req.session.save((err) => {
         if (err) {
           console.error('❌ Session save error:', err);
@@ -204,11 +202,25 @@ exports.resetPassword = async (req, res) => {
   }
 };
 
-exports.checkLoginStatus = (req, res) => {
-  if (req.isAuthenticated && req.isAuthenticated()) {
-    return res.status(200).json({ user: req.user });
+// ✅ Updated token-based check-login logic
+exports.checkLoginStatus = async (req, res) => {
+  try {
+    const authHeader = req.headers.authorization;
+    if (!authHeader || !authHeader.startsWith("Bearer ")) {
+      return res.status(401).json({ message: "Missing or invalid token" });
+    }
+
+    const token = authHeader.split(" ")[1];
+    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+
+    const user = await User.findById(decoded.id).select("-password");
+    if (!user) return res.status(404).json({ message: "User not found" });
+
+    return res.status(200).json({ user });
+  } catch (err) {
+    console.error("❌ Token verification failed:", err.message);
+    return res.status(401).json({ message: "Invalid or expired token" });
   }
-  return res.status(401).json({ message: 'Not logged in' });
 };
 
 exports.logout = (req, res) => {

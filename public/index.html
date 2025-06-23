@@ -80,8 +80,6 @@
 
         <!-- Sign Up (before login) -->
 
-<!-- Sign Up Button (visible when logged out) -->
-<!-- Sign Up Button (visible when logged out) -->
 <button onclick="toggleModal()" id="signupBtnNav"
   class="bg-blue-600 text-white px-5 py-2 rounded-lg hover:bg-blue-700 transition font-semibold">
   Sign Up
@@ -98,7 +96,7 @@
   <!-- Dropdown Menu -->
   <div id="profileDropdown"
     class="absolute right-0 mt-2 w-60 bg-white rounded-xl shadow-lg border border-gray-100 hidden z-50 overflow-hidden">
-    <div id="userEmailDisplay" class="px-5 py-3 text-sm text-gray-600 border-b border-gray-200"></div>
+    <div id="userEmailDisplay" class="px-5 py-3 text-sm text-gray-600 border-b border-gray-200 break-words whitespace-normal"></div>
     <ul class="text-sm text-gray-800 divide-y divide-gray-100">
       <li>
         <button id="logoutBtn"
@@ -675,7 +673,7 @@
         <h3 class="text-lg font-semibold text-gray-900 mb-1">Install Extension</h3>
         <p class="text-gray-600 mb-3 text-sm">Add FixProm to Chrome in one click.</p>
         <div class="bg-white rounded-xl shadow-md p-3 w-full max-w-sm flex items-center justify-center min-h-[120px]">
-          <button onclick="handleDownloadClick()" class="bg-blue-600 text-white text-base sm:text-lg px-6 py-3 sm:px-8 sm:py-4 rounded-lg font-semibold hover:bg-blue-700 flex items-center download-extension-btn">
+          <button class="bg-blue-600 text-white text-base sm:text-lg px-6 py-3 sm:px-8 sm:py-4 rounded-lg font-semibold hover:bg-blue-700 flex items-center download-extension-btn">
   <span class="text-lg sm:text-xl font-bold">Download Extension</span>
 </button>
 
@@ -994,11 +992,12 @@
         <h3 class="text-lg font-semibold mb-4">Product</h3>
         <ul class="space-y-2 text-sm">
           <li><a href="#features" class="text-gray-400 hover:text-white transition-colors">Features</a></li>
-          <!-- <li><a href="#pricing" class="text-gray-400 hover:text-white transition-colors">Pricing</a></li> -->
+        
           <li>
-  <button onclick="handleDownloadClick()" class="text-gray-400 hover:text-white transition-colors download-extension-btn">
-    Download
-  </button>
+  <button class="text-gray-400 hover:text-white transition-colors download-extension-btn">
+  Download
+</button>
+
 </li>
 
         </ul>
@@ -1288,6 +1287,19 @@
       .catch(console.error);
   };
 </script>
+
+<!-- Logout Confirmation Modal -->
+
+<div id="logoutModal" class="fixed inset-0 flex items-center justify-center z-50 bg-black bg-opacity-40 hidden">
+  <div class="bg-white p-6 rounded-xl shadow-xl max-w-sm w-full">
+    <h2 class="text-lg font-semibold mb-4 text-center">Are you sure you want to logout?</h2>
+    <div class="flex justify-between mt-6">
+      <button id="cancelLogoutBtn" class="px-4 py-2 bg-gray-200 rounded-md hover:bg-gray-300">Cancel</button>
+      <button id="confirmLogoutBtn" class="px-4 py-2 bg-red-600 text-white rounded-md hover:bg-red-700">Yes, Logout</button>
+    </div>
+  </div>
+</div>
+
 
 
 </body>

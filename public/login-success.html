@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Fixprom Login</title>
+  <script>
+    const params = new URLSearchParams(window.location.search);
+    const token = params.get("token");
+
+    if (token) {
+      localStorage.setItem("fixpromToken", token);
+      window.location.replace("/"); // ✅ faster, avoids history entry
+    } else {
+      document.write("<h2>❌ Login failed. No token received.</h2>");
+    }
+  </script>
+</head>
+<body></body>
+</html>

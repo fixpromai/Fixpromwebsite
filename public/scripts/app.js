@@ -16,12 +16,7 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   });
 
-  // Chrome Web Store install buttons
-  // document.querySelectorAll(".install-btn, #installBtn, #installMainBtn").forEach((btn) => {
-  //   btn.addEventListener("click", () => {
-  //     window.open("https://chrome.google.com/webstore/detail/fixprom/YOUR_EXTENSION_ID", "_blank");
-  //   });
-  // });
+  
 
   // Scroll to pricing section
   document.querySelectorAll(".upgrade-btn, #upgradeProBtn").forEach((btn) => {
@@ -153,4 +148,5 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   });
 });
+
 

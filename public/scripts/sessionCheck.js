@@ -1,53 +1,60 @@
 document.addEventListener("DOMContentLoaded", () => {
   checkSession();
 
-  function checkSession() {
-    fetch("/api/auth/check-login", {
-      method: "GET",
-      credentials: "include", // ✅ Required to send cookies
-    })
-      .then(async (res) => {
-        const avatar = document.getElementById("userAvatar");
-        const avatarImg = document.getElementById("avatarImg");
-        const signupBtn = document.getElementById("signupBtnNav");
-        const emailDisplay = document.getElementById("userEmailDisplay");
+  async function checkSession() {
+    const token = localStorage.getItem("fixpromToken");
 
-        if (res.ok) {
-          const data = await res.json();
-          const email = data.user?.email || "";
+    if (!token) {
+      resetLoginUI();
+      return;
+    }
 
-          // ✅ Hide signup, show avatar
-          if (signupBtn) {
-            signupBtn.classList.add("hidden");
-            signupBtn.style.display = "none";
-          }
-          if (avatar) {
-            avatar.classList.remove("hidden");
-            avatar.style.display = "block";
-          }
-          if (avatarImg) {
-            avatarImg.src = "images/profile.png";
-          }
-          if (emailDisplay) {
-            emailDisplay.textContent = email;
-          }
-
-          localStorage.setItem("fixpromUserEmail", email);
-
-          // ✅ Only redirect if user clicked "Download Extension" before login
-          const wantsExtension = localStorage.getItem("wantsExtension");
-          if (typeof onUserLoginSuccess === "function" && wantsExtension === "true") {
-            onUserLoginSuccess();
-          }
-
-        } else {
-          resetLoginUI();
-        }
-      })
-      .catch((err) => {
-        console.error("⚠️ Session check failed:", err);
-        resetLoginUI();
+    try {
+      const res = await fetch("/api/auth/check-login", {
+        method: "GET",
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
       });
+
+      const avatar = document.getElementById("userAvatar");
+      const avatarImg = document.getElementById("avatarImg");
+      const signupBtn = document.getElementById("signupBtnNav");
+      const emailDisplay = document.getElementById("userEmailDisplay");
+
+      if (res.ok) {
+        const data = await res.json();
+        const email = data.user?.email || "";
+
+        // ✅ Hide signup, show avatar
+        if (signupBtn) {
+          signupBtn.classList.add("hidden");
+          signupBtn.style.display = "none";
+        }
+        if (avatar) {
+          avatar.classList.remove("hidden");
+          avatar.style.display = "block";
+        }
+        if (avatarImg) {
+          avatarImg.src = "images/profile.png";
+        }
+        if (emailDisplay) {
+          emailDisplay.textContent = email;
+        }
+
+        localStorage.setItem("fixpromUserEmail", email);
+
+        const wantsExtension = localStorage.getItem("wantsExtension");
+        if (typeof onUserLoginSuccess === "function" && wantsExtension === "true") {
+          onUserLoginSuccess();
+        }
+      } else {
+        resetLoginUI();
+      }
+    } catch (err) {
+      console.error("⚠️ Token-based session check failed:", err);
+      resetLoginUI();
+    }
   }
 
   function resetLoginUI() {
