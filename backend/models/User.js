@@ -15,36 +15,20 @@ const userSchema = new mongoose.Schema({
     unique: true
   },
   photo: {
-    type: String // ✅ Added to store Google profile photo URL
-  },
-  password: {
     type: String,
-    required: function () {
-      return !this.googleId;
-    },
-    validate: {
-      validator: function (value) {
-        if (!this.googleId) {
-          return /^(?=.*[A-Z])(?=.*\d)(?=.*[\W_]).{8,}$/.test(value);
-        }
-        return true;
-      },
-      message: 'Password must have 1 capital, 1 number, 1 symbol & be 8+ characters.'
-    }
+    default: null
   },
   subscribed: {
     type: Boolean,
     default: false
   },
-  isVerified: {
-    type: Boolean,
-    default: false
+  polishCount: {
+    type: Number,
+    default: 0
   },
-  otp: String,
-  otpExpiry: Date,
-  otpVerified: {
-    type: Boolean,
-    default: false
+  polishCountDate: {
+    type: Date,
+    default: null
   }
 }, {
   timestamps: true

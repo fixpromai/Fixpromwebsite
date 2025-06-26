@@ -4,57 +4,52 @@ const jwt = require("jsonwebtoken");
 
 const router = express.Router();
 
-// ✅ Step 1: Start Google OAuth flow
+// Start Google OAuth flow
 router.get(
   "/google",
   passport.authenticate("google", {
     scope: ["profile", "email"],
     prompt: "select_account",
+    session: false, // Disable session for Passport
   })
 );
 
-// ✅ Step 2: Handle Google OAuth callback
+// Google OAuth callback
 router.get(
   "/google/callback",
   passport.authenticate("google", {
     failureRedirect: "/login",
+    session: false, // Disable session for Passport
   }),
-  (req, res, next) => {
+  (req, res) => {
     console.log("✅ Google login success:", req.user);
 
-    req.login(req.user, (err) => {
-      if (err) {
-        console.error("❌ Session login error:", err);
-        return next(err);
-      }
+    // Create JWT
+    const token = jwt.sign(
+      { id: req.user._id, email: req.user.email },
+      process.env.JWT_SECRET,
+      { expiresIn: "7d" }
+    );
 
-      // ✅ Generate JWT token
-      const token = jwt.sign(
-        { id: req.user._id, email: req.user.email },
-        process.env.JWT_SECRET,
-        { expiresIn: "7d" }
-      );
-
-      // ✅ Redirect to frontend with token
-      const redirectUrl = `${process.env.CLIENT_HOME_URL}/login-success.html?token=${token}`;
-      res.redirect(redirectUrl);
-    });
+    // Redirect to client with JWT as query param
+    const redirectUrl = `${process.env.CLIENT_HOME_URL}/login-success.html?token=${token}`;
+    res.redirect(redirectUrl);
   }
 );
 
-// ✅ Step 3: Logout route
-router.get("/logout", (req, res) => {
-  req.logout((err) => {
-    if (err) {
-      console.error("❌ Logout failed:", err);
-      return res.status(500).send("Logout failed");
-    }
-
-    req.session.destroy(() => {
-      res.clearCookie("connect.sid");
-      res.redirect("/");
-    });
-  });
+// (Optional, but recommended) Endpoint to verify JWT validity
+router.get("/verify", (req, res) => {
+  const authHeader = req.headers.authorization;
+  if (!authHeader || !authHeader.startsWith("Bearer ")) {
+    return res.status(401).json({ message: "No token provided" });
+  }
+  const token = authHeader.split(" ")[1];
+  try {
+    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+    res.json({ valid: true, user: decoded });
+  } catch (err) {
+    res.status(401).json({ valid: false, message: "Invalid token" });
+  }
 });
 
 module.exports = router;

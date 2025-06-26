@@ -34,17 +34,14 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // Confirm logout
   confirmLogoutBtn?.addEventListener('click', () => {
-    localStorage.removeItem("fixpromToken");
+    localStorage.removeItem("fixpromJWT");      // <-- Updated!
     localStorage.removeItem("fixpromUserEmail");
     logoutModal?.classList.add('hidden');
     window.location.href = "/";
   });
 
- 
   cancelLogoutBtn?.addEventListener('click', () => {
     logoutModal?.classList.add('hidden');
-
-   
     if (typeof window.updateLoginUIFromSession === 'function') {
       window.updateLoginUIFromSession();
     }

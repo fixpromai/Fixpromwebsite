@@ -3,7 +3,7 @@ const GoogleStrategy = require('passport-google-oauth20').Strategy;
 const User = require('../models/User');
 require('dotenv').config();
 
-// ✅ Google OAuth Strategy
+
 passport.use(
   new GoogleStrategy(
     {
@@ -34,19 +34,4 @@ passport.use(
   )
 );
 
-// ✅ Serialize user to store user._id in session
-passport.serializeUser((user, done) => {
-  done(null, user._id);
-});
-
-// ✅ Deserialize user by ID and attach full user object to req.user
-passport.deserializeUser(async (id, done) => {
-  try {
-    const user = await User.findById(id);
-    if (!user) return done(null, false);
-    return done(null, user);
-  } catch (err) {
-    console.error('❌ Deserialize Error:', err);
-    return done(err, null);
-  }
-});
+// No serializeUser or deserializeUser needed for JWT-only auth

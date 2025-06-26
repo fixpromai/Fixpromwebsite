@@ -42,7 +42,7 @@ exports.requestSignupOtp = async (req, res) => {
   }
 };
 
-exports.verifySignupOtp = async (req, res, next) => {
+exports.verifySignupOtp = async (req, res) => {
   try {
     const { email, otp } = req.body;
     const temp = tempUsers[email];
@@ -61,26 +61,20 @@ exports.verifySignupOtp = async (req, res, next) => {
     await user.save();
     delete tempUsers[email];
 
-    req.login(user, (err) => {
-      if (err) {
-        console.error('❌ Session creation failed:', err);
-        return res.status(500).json({ message: 'Login session error' });
-      }
+    // Return JWT on successful signup
+    const token = jwt.sign(
+      { id: user._id, email: user.email },
+      process.env.JWT_SECRET,
+      { expiresIn: "7d" }
+    );
 
-      req.session.save((err) => {
-        if (err) {
-          console.error('❌ Session save error:', err);
-          return res.status(500).json({ message: 'Session save failed' });
-        }
-
-        return res.status(200).json({
-          message: 'Signup and login successful',
-          user: {
-            email: user.email,
-            _id: user._id
-          }
-        });
-      });
+    return res.status(200).json({
+      message: 'Signup successful',
+      user: {
+        email: user.email,
+        _id: user._id
+      },
+      token
     });
   } catch (err) {
     console.error('❌ Signup verify error:', err.message);
@@ -108,7 +102,7 @@ exports.resendSignupOtp = async (req, res) => {
   }
 };
 
-exports.signin = async (req, res, next) => {
+exports.signin = async (req, res) => {
   try {
     const { email, password } = req.body;
     const user = await User.findOne({ email });
@@ -119,16 +113,20 @@ exports.signin = async (req, res, next) => {
     const isMatch = await bcrypt.compare(password, user.password);
     if (!isMatch) return res.status(401).json({ message: 'Incorrect password' });
 
-    req.login(user, (err) => {
-      if (err) return next(err);
+    // Return JWT on successful signin
+    const token = jwt.sign(
+      { id: user._id, email: user.email },
+      process.env.JWT_SECRET,
+      { expiresIn: "7d" }
+    );
 
-      return res.status(200).json({
-        message: 'Login successful',
-        user: {
-          email: user.email,
-          _id: user._id
-        }
-      });
+    return res.status(200).json({
+      message: 'Login successful',
+      user: {
+        email: user.email,
+        _id: user._id
+      },
+      token
     });
   } catch (err) {
     console.error('❌ Sign-in error:', err.message);
@@ -202,41 +200,40 @@ exports.resetPassword = async (req, res) => {
   }
 };
 
-// ✅ Updated token-based check-login logic
 exports.checkLoginStatus = async (req, res) => {
   try {
     const authHeader = req.headers.authorization;
     if (!authHeader || !authHeader.startsWith("Bearer ")) {
-      return res.status(401).json({ message: "Missing or invalid token" });
+      return res.status(401).json({
+        success: false,
+        isLoggedIn: false,
+        message: "Missing or invalid token"
+      });
     }
 
     const token = authHeader.split(" ")[1];
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
 
     const user = await User.findById(decoded.id).select("-password");
-    if (!user) return res.status(404).json({ message: "User not found" });
+    if (!user) {
+      return res.status(404).json({
+        success: false,
+        isLoggedIn: false,
+        message: "User not found"
+      });
+    }
 
-    return res.status(200).json({ user });
+    return res.status(200).json({
+      success: true,
+      isLoggedIn: true,
+      user
+    });
   } catch (err) {
     console.error("❌ Token verification failed:", err.message);
-    return res.status(401).json({ message: "Invalid or expired token" });
+    return res.status(401).json({
+      success: false,
+      isLoggedIn: false,
+      message: "Invalid or expired token"
+    });
   }
-};
-
-exports.logout = (req, res) => {
-  req.logout((err) => {
-    if (err) {
-      console.error('❌ Logout error:', err);
-      return res.status(500).json({ message: 'Logout failed' });
-    }
-    res.clearCookie('connect.sid');
-    return res.status(200).json({ message: 'Logged out successfully' });
-  });
-};
-
-exports.check = (req, res) => {
-  if (req.isAuthenticated && req.isAuthenticated()) {
-    return res.status(200).json({ user: req.user });
-  }
-  return res.status(401).json({ message: 'Not logged in' });
 };

@@ -195,7 +195,8 @@ function closeForgotPasswordModal() {
 
 // Handle Chrome extension download
 function handleDownloadClick() {
-  const isLoggedIn = localStorage.getItem("fixpromUserEmail");
+  const jwt = localStorage.getItem("fixpromJWT");
+  const isLoggedIn = !!jwt;
 
   if (isLoggedIn) {
     window.open("https://chromewebstore.google.com/detail/fineaoekjmkdgnmeenfjdlkbnhlidmme?utm_source=item-share-cb", "_blank");

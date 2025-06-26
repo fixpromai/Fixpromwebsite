@@ -4,7 +4,6 @@
   <meta charset="UTF-8" />
   <title>Redirecting...</title>
   <style>
-    /* ✅ Completely hide page contents */
     html, body {
       margin: 0;
       padding: 0;
@@ -21,15 +20,26 @@
       const token = params.get("token");
 
       if (token) {
-        localStorage.setItem("fixpromToken", token);
+        // Store JWT
+        localStorage.setItem("fixpromJWT", token);
+
+        // Optional: decode email from JWT and store for UI (if needed)
+        try {
+          const payload = JSON.parse(atob(token.split('.')[1]));
+          if (payload && payload.email) {
+            localStorage.setItem("fixpromUserEmail", payload.email);
+          }
+        } catch (e) {
+          // Ignore decode errors
+        }
+
+        // (If you want, preserve wantsExtension logic)
         localStorage.setItem("wantsExtension", "true");
 
-        // ✅ Silent redirect back to home
         setTimeout(() => {
           window.location.replace("/");
-        }, 100); // short delay ensures token is saved
+        }, 100);
       } else {
-        // Still no visible content
         console.error("❌ Login failed. No token found.");
       }
     });
